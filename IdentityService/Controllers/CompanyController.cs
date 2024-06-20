@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers;
 
-[Route("api/[controller]/[action]")]
+[Route("api/companies")]
 [ApiController]
 public class CompanyController : ControllerBase
 {
@@ -14,7 +14,7 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(string name)
+    public async Task<IActionResult> Post(string name)
     {
         if (string.IsNullOrEmpty(name))
             return BadRequest("Please provide valid name");
@@ -22,9 +22,9 @@ public class CompanyController : ControllerBase
         return Ok(await _companyService.RegisterAsync(name));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CheckCompany(string apiKey, string apiSecret)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> Get(int id)
     {
-        return Ok(await _companyService.CheckCompanyAsync(apiKey, apiSecret));
+        return Ok(await _companyService.GetCompanyAsync(id));
     }
 }

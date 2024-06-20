@@ -5,5 +5,5 @@ namespace IdentityService.Services;
 public interface ICompanyService
 {
     Task<CompanyDto> RegisterAsync(string name);
-    Task<bool> CheckCompanyAsync(string apiKey, string apiSecret);
+    Task<CompanyDto> GetCompanyAsync(int companyId);
 }

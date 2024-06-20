@@ -11,9 +11,9 @@ public class CompanyRepository : ICompanyRepository
     {
         _context = context;
     }
-    public async Task<bool> CheckCompanyAsync(string apiKey, string apiSecret)
+    public async Task<Company> GetCompanyAsync(int companyId)
     {
-        return await _context.Companies.AnyAsync(x => x.APIKey.Equals(apiKey) && x.APISecret.Equals(apiSecret));
+        return await _context.Companies.FirstOrDefaultAsync(x => x.Id == companyId);
     }
 
     public async Task<Company> RegisterAsync(Company company)
