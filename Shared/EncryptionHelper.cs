@@ -5,21 +5,26 @@ namespace Shared;
 
 public class EncryptionHelper
 {
-    private readonly string key;
-    private readonly string iv;
+    private readonly byte[] key;
+    private readonly byte[] iv;
 
     public EncryptionHelper(string key, string iv)
     {
-        this.key = key;
-        this.iv = iv;
+        if (key == null || iv == null)
+            throw new ArgumentNullException(nameof(key), "Key and IV must not be null");
+        if (key.Length != 32 || iv.Length != 16)
+            throw new ArgumentException("Invalid key or IV length. Key must be 32 bytes and IV must be 16 bytes.");
+
+        this.key = Encoding.UTF8.GetBytes(key);
+        this.iv = Encoding.UTF8.GetBytes(iv);
     }
 
     public string Encrypt(string plainText)
     {
         using (Aes aes = Aes.Create())
         {
-            aes.Key = Encoding.UTF8.GetBytes(key);
-            aes.IV = Encoding.UTF8.GetBytes(iv);
+            aes.Key = key;
+            aes.IV = iv;
 
             using (MemoryStream memoryStream = new MemoryStream())
             {
@@ -39,8 +44,8 @@ public class EncryptionHelper
     {
         using (Aes aes = Aes.Create())
         {
-            aes.Key = Encoding.UTF8.GetBytes(key);
-            aes.IV = Encoding.UTF8.GetBytes(iv);
+            aes.Key = key;
+            aes.IV = iv;
 
             using (MemoryStream memoryStream = new MemoryStream(Convert.FromBase64String(cipherText)))
             {

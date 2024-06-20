@@ -13,13 +13,9 @@ public class CompanyService : ICompanyService
     private readonly IMapper _mapper;
     private readonly ICompanyRepository _repository;
 
-    public CompanyService(IMapper mapper, ICompanyRepository repository)
+    public CompanyService(IMapper mapper, ICompanyRepository repository, EncryptionHelper encryptionHelper)
     {
-        string encryptionKey = Environment.GetEnvironmentVariable("ENCRYPTION_KEY");
-        string encryptionIv = Environment.GetEnvironmentVariable("ENCRYPTION_IV");
-
-        _encryptionHelper = new EncryptionHelper(encryptionKey, encryptionIv);
-
+        _encryptionHelper = encryptionHelper;
         _mapper = mapper;
         _repository = repository;
     }
@@ -47,7 +43,12 @@ public class CompanyService : ICompanyService
 
         await _repository.RegisterAsync(company);
 
-        return _mapper.Map<CompanyDto>(company);
+        var result = _mapper.Map<CompanyDto>(company);
+
+        result.APIKey = _encryptionHelper.Decrypt(result.APIKey);
+        result.APISecret = _encryptionHelper.Decrypt(result.APISecret);
+
+        return result;
     }
 
     private string GenerateApiKey()
