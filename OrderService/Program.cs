@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using OrderService;
 using OrderService.Data;
+using OrderService.Middleware;
 using OrderService.Models;
 using OrderService.Repositories;
 using OrderService.Services;
@@ -33,7 +35,17 @@ builder.Services.AddScoped<IOrderService, OrderService.Services.OrderService>();
 builder.Services.AddHttpClient<IIdentityService, IdentityService>();
 builder.Services.AddScoped<ApiKeyAuthFilter>();
 
+builder.Services.AddRateLimiter(options => {
+    options.AddFixedWindowLimiter("Fixed", opt => {
+        opt.Window = TimeSpan.FromSeconds(3);
+        opt.PermitLimit = 3;
+    });
+});
+
+
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -45,6 +57,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseRateLimiter();
 
 app.MapControllers();
 
