@@ -27,4 +27,15 @@ public class OrdersController : ControllerBase
         var order = await _orderService.CreateOrderAsync( orderDto);
         return Ok(order);
     }
+
+    [HttpGet("compute")]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
+    public async Task<IActionResult> Compute()
+    {
+        if (HttpContext.Items["CompanyId"] is not int companyId)
+            return Unauthorized();
+
+        var order = await _orderService.ComputeCompanyOrdersAsync(companyId);
+        return Ok(order);
+    }
 }
