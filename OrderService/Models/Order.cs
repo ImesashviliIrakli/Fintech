@@ -12,5 +12,6 @@ public class Order
     public decimal Amount { get; set; }
     [Required]
     public required string Currency { get; set; }
+    public required int Status { get; set; } = 0;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

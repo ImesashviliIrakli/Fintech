@@ -27,8 +27,8 @@ builder.Services.AddDbContext<AppDbContext>
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 
-var encryptionKey = builder.Configuration["ENCRYPTION_KEY"];
-var encryptionIv = builder.Configuration["ENCRYPTION_IV"];
+var encryptionKey = "12345678901234567890123456789012";//builder.Configuration["ENCRYPTION_KEY"];
+var encryptionIv = "1234567890123456";// builder.Configuration["ENCRYPTION_IV"];
 
 if (string.IsNullOrEmpty(encryptionKey) || string.IsNullOrEmpty(encryptionIv))
     throw new InvalidOperationException("Encryption keys are not set in user secrets.");

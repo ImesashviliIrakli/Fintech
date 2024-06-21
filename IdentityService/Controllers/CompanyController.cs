@@ -27,4 +27,18 @@ public class CompanyController : ControllerBase
     {
         return Ok(await _companyService.GetCompanyAsync(id));
     }
+
+    [HttpGet("validate")]
+    public async Task<IActionResult> ValidateCompanyCredentials()
+    {
+        if (!Request.Headers.TryGetValue("ApiKey", out var apiKey) ||
+               !Request.Headers.TryGetValue("ApiSecret", out var apiSecret))
+        {
+            return Unauthorized("Missing API key or secret");
+        }
+
+        var companyId = await _companyService.ValidateCompanyCredentialsAsync(apiKey, apiSecret);
+
+        return Ok(companyId);
+    }
 }

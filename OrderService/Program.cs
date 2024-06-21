@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using OrderService;
 using OrderService.Data;
+using OrderService.Models;
 using OrderService.Repositories;
 using OrderService.Services;
 using System.Reflection;
@@ -10,7 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.OperationFilter<CustomHeaderParameter>();
+}); 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddDbContext<AppDbContext>
         (
@@ -25,6 +30,8 @@ builder.Services.AddDbContext<AppDbContext>
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService.Services.OrderService>();
+builder.Services.AddHttpClient<IIdentityService, IdentityService>();
+builder.Services.AddScoped<ApiKeyAuthFilter>();
 
 var app = builder.Build();
 

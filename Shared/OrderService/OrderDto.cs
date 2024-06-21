@@ -11,6 +11,7 @@ public class OrderDto
     public decimal Amount { get; set; }
     [Required]
     public required string Currency { get; set; }
+    public OrderStatus Status { get; set; }
     [Required]
     public DateTime CreatedAt { get; set; }
 }

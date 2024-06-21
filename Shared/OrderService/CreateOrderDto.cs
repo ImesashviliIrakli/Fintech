@@ -5,7 +5,7 @@ namespace Shared.OrderService;
 
 public class CreateOrderDto
 {
-    [Required]
+    [JsonIgnore]
     public int CompanyId { get; set; }
     [Required]
     public decimal Amount { get; set; }

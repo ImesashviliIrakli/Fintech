@@ -38,6 +38,7 @@ public class ExceptionMiddleware
             case NotFoundException:
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 break;
+            case ComputeException:
             case BadRequestException:
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 break;

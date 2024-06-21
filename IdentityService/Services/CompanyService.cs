@@ -51,6 +51,18 @@ public class CompanyService : ICompanyService
         return result;
     }
 
+    public async Task<int?> ValidateCompanyCredentialsAsync(string apiKey, string apiSecret)
+    {
+        var encryptedApiKey = _encryptionHelper.Encrypt(apiKey);
+        var encryptedApiSecret = _encryptionHelper.Encrypt(apiSecret);
+        var company = await _repository.GetCompanyByCredentialsAsync(encryptedApiKey, encryptedApiSecret);
+
+        if (company == null)
+            throw new NotFoundException($"Company not found with the used credentials");
+
+        return company.Id;
+    }
+
     private string GenerateApiKey()
     {
         return Guid.NewGuid().ToString();

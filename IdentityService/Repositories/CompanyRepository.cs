@@ -13,7 +13,14 @@ public class CompanyRepository : ICompanyRepository
     }
     public async Task<Company> GetCompanyAsync(int companyId)
     {
-        return await _context.Companies.FirstOrDefaultAsync(x => x.Id == companyId);
+        return await _context.Companies
+            .FirstOrDefaultAsync(x => x.Id == companyId);
+    }
+
+    public async Task<Company> GetCompanyByCredentialsAsync(string apiKey, string apiSecret)
+    {
+        return await _context.Companies
+            .FirstOrDefaultAsync(x => x.APIKey.Equals(apiKey) & x.APISecret.Equals(apiSecret));
     }
 
     public async Task<Company> RegisterAsync(Company company)
