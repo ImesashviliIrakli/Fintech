@@ -40,4 +40,9 @@ public class OrderRepository : IOrderRepository
 
         return order;
     }
+
+    public async Task<Order> GetOrderByIdAsync(int orderId)
+    {
+        return await _context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+    }
 }

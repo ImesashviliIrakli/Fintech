@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrderService.Services;
 using Shared.OrderService;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace OrderService.Controllers;
 
@@ -21,10 +22,10 @@ public class OrdersController : ControllerBase
     {
         if (HttpContext.Items["CompanyId"] is not int companyId)
             return Unauthorized();
-        
+
         orderDto.CompanyId = companyId;
 
-        var order = await _orderService.CreateOrderAsync( orderDto);
+        var order = await _orderService.CreateOrderAsync(orderDto);
         return Ok(order);
     }
 
@@ -36,6 +37,17 @@ public class OrdersController : ControllerBase
             return Unauthorized();
 
         var order = await _orderService.ComputeCompanyOrdersAsync(companyId);
+        return Ok(order);
+    }
+
+    [HttpGet("{id:int}")]
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
+    public async Task<IActionResult> Get(int id)
+    {
+        if (HttpContext.Items["CompanyId"] is not int companyId)
+            return Unauthorized();
+
+        var order = await _orderService.GetOrderByIdAsync(id);
         return Ok(order);
     }
 }

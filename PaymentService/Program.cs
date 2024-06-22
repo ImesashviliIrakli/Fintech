@@ -5,6 +5,9 @@ using System.Reflection;
 using PaymentService.Data;
 using Microsoft.EntityFrameworkCore;
 using PaymentService.Repositories;
+using PaymentService.Middleware;
+using Microsoft.AspNetCore.Connections;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +37,11 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService.Services.PaymentService>();
 builder.Services.AddHttpClient<IIdentityService, IdentityService>();
 builder.Services.AddScoped<ApiKeyAuthFilter>();
+builder.Services.AddHttpClient();
+
+var factory = new ConnectionFactory() { HostName = "localhost" }; // or your RabbitMQ host
+var rabbitMqConnection = factory.CreateConnection();
+builder.Services.AddSingleton<IConnection>(rabbitMqConnection);
 
 var app = builder.Build();
 

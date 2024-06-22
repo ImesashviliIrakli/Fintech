@@ -2,7 +2,7 @@
 
 namespace Shared.PaymentService;
 
-public class CreatePaymentDto
+public class PaymentDto
 {
     [Required]
     public int OrderId { get; set; }

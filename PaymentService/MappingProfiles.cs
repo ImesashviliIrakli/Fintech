@@ -8,6 +8,6 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
-        CreateMap<CreatePaymentDto, Payment>();
+        CreateMap<PaymentDto, Payment>();
     }
 }

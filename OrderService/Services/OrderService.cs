@@ -16,6 +16,14 @@ public class OrderService : IOrderService
         _orderRepository = orderRepository;
         _mapper = mapper;
     }
+
+    public async Task CompleteOrderAsync(OrderDto orderDto)
+    {
+        await _orderRepository.CompleteOrderAsync(orderDto.Id);
+
+
+    }
+
     public async Task<ComputeOrderDto> ComputeCompanyOrdersAsync(int companyId)
     {
         var orders = await _orderRepository.GetAllCompanyOrdersAsync(companyId);
@@ -34,6 +42,16 @@ public class OrderService : IOrderService
         var newOrder = await _orderRepository.CreateOrderAsync(_mapper.Map<Order>(order));
 
         return _mapper.Map<OrderDto>(newOrder);
+    }
+
+    public async Task<OrderDto> GetOrderByIdAsync(int orderId)
+    {
+        var order = await _orderRepository.GetOrderByIdAsync(orderId);
+
+        if (order == null)
+            throw new NotFoundException($"Order with id:{orderId} not found");
+
+        return _mapper.Map<OrderDto>(order);
     }
 
     private async Task CheckCompletedOrdersAmount(int companyId)

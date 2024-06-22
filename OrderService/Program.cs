@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using OrderService;
 using OrderService.Data;
 using OrderService.Middleware;
@@ -16,8 +18,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.EnableAnnotations();
     c.OperationFilter<CustomHeaderParameter>();
 }); 
+
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddDbContext<AppDbContext>
         (
@@ -29,6 +33,15 @@ builder.Services.AddDbContext<AppDbContext>
                 );
             }
         );
+
+builder.Services.AddHostedService<RabbitMqConsumerService>(provider =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("RabbitMqConnection");
+    var queueName = "orderServiceQueue";
+    var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+
+    return new RabbitMqConsumerService(connectionString, queueName, scopeFactory);
+});
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService.Services.OrderService>();
