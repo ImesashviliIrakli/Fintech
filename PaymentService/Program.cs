@@ -23,16 +23,10 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-builder.Services.AddDbContext<AppDbContext>
-        (
-            options =>
-            {
-                options.UseSqlServer
-                (
-                    builder.Configuration.GetConnectionString("DefaultConnection")
-                );
-            }
-        );
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSqlConnection"));
+});
 
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService.Services.PaymentService>();

@@ -2,7 +2,7 @@
 
 public class IdentityService : IIdentityService
 {
-    private const string Url = "https://localhost:7000/api/companies/validate";
+    private const string Url = "https://localhost:7000/companies/validate";
     private readonly HttpClient _httpClient;
 
     public IdentityService(HttpClient httpClient)

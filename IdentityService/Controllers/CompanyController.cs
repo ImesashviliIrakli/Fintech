@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers;
 
-[Route("api/companies")]
+[Route("companies")]
 [ApiController]
 public class CompanyController : ControllerBase
 {

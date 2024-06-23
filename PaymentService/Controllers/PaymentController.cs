@@ -5,7 +5,7 @@ using Shared.Helpers;
 
 namespace PaymentService.Controllers;
 
-[Route("api/[controller]")]
+[Route("process")]
 [ApiController]
 public class PaymentController : ControllerBase
 {

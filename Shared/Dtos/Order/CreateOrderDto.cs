@@ -12,5 +12,5 @@ public class CreateOrderDto
     [Required]
     public required string Currency { get; set; }
     [JsonIgnore]
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

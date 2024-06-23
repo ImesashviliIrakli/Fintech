@@ -23,21 +23,16 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddDbContext<AppDbContext>
-        (
-            options =>
-            {
-                options.UseSqlServer
-                (
-                    builder.Configuration.GetConnectionString("DefaultConnection")
-                );
-            }
-        );
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSqlConnection"));
+});
 
 builder.Services.AddHostedService<RabbitMqConsumer>(provider =>
 {
     var connectionString = builder.Configuration.GetConnectionString("RabbitMqConnection");
-    var queueName = "orderServiceQueue";
+    var queueName = builder.Configuration.GetConnectionString("QueueName");
     var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
 
     return new RabbitMqConsumer(connectionString, queueName, scopeFactory);
