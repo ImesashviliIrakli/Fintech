@@ -42,6 +42,7 @@ public class ExceptionMiddleware
                 break;
             case ComputeException:
             case BadRequestException:
+            case ExpiryDateException:                
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 break;
             default:

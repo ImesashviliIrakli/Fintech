@@ -26,14 +26,17 @@ public class OrderRepository : IOrderRepository
         return order;
     }
 
-    public async Task<Order> CompleteOrderAsync(int orderId)
+    public async Task<Order> CompleteOrderAsync(int orderId, int status)
     {
         var order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
 
         if (order == null)
             throw new NotFoundException($"Order with id:{orderId} not found");
 
-        order.Status = (int)OrderStatus.Completed;
+        if (order != null && order.Status != 0)
+            throw new BadRequestException($"Order with id:{orderId} has already been processed");
+
+        order.Status = status;
 
         _context.Orders.Update(order);
         await _context.SaveChangesAsync();

@@ -2,6 +2,7 @@
 using OrderService.Models;
 using OrderService.Repositories;
 using Shared.Dtos.Order;
+using Shared.Dtos.Payment;
 using Shared.Enums;
 using Shared.Exceptions;
 
@@ -11,17 +12,24 @@ public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IMapper _mapper;
-    public OrderService(IOrderRepository orderRepository, IMapper mapper)
+    private readonly ILogger<OrderService> _logger;
+    public OrderService(IOrderRepository orderRepository, IMapper mapper, ILogger<OrderService> logger)
     {
         _orderRepository = orderRepository;
         _mapper = mapper;
+        _logger = logger;
     }
 
-    public async Task CompleteOrderAsync(OrderDto orderDto)
+    public async Task CompleteOrderAsync(PaymentStatusDto orderDto)
     {
-        await _orderRepository.CompleteOrderAsync(orderDto.Id);
+        var check = await CheckCompletedOrdersAmountAsync(orderDto.CompanyId);
 
+        if (!check)
+            return;
 
+        await _orderRepository.CompleteOrderAsync(orderDto.OrderId, (int)orderDto.OrderStatus);
+
+        _logger.LogInformation($"Order with id:{orderDto.OrderId} completed");
     }
 
     public async Task<ComputeOrderDto> ComputeCompanyOrdersAsync(int companyId)
@@ -37,9 +45,9 @@ public class OrderService : IOrderService
         return result;
     }
 
-    public async Task<OrderDto> CreateOrderAsync(CreateOrderDto order)
+    public async Task<OrderDto> CreateOrderAsync(CreateOrderDto orderDto)
     {
-        var newOrder = await _orderRepository.CreateOrderAsync(_mapper.Map<Order>(order));
+        var newOrder = await _orderRepository.CreateOrderAsync(_mapper.Map<Order>(orderDto));
 
         return _mapper.Map<OrderDto>(newOrder);
     }
@@ -54,13 +62,18 @@ public class OrderService : IOrderService
         return _mapper.Map<OrderDto>(order);
     }
 
-    private async Task CheckCompletedOrdersAmount(int companyId)
+    private async Task<bool> CheckCompletedOrdersAmountAsync(int companyId)
     {
         var orders = await _orderRepository.GetAllCompanyOrdersAsync(companyId);
 
         var totalCompleted = orders.Where(x => x.Status == (int)OrderStatus.Completed).Sum(x => x.Amount);
 
         if (totalCompleted > 10000)
-            throw new ComputeException($"The total of all completed orders exceeds 10000$ for company:{companyId}");
+        {
+            _logger.LogWarning($"The total of all completed orders exceeds 10000$ for company:{companyId}");
+            return false;
+        }
+
+        return true;
     }
 }

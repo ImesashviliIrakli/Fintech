@@ -3,6 +3,7 @@ using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 using Shared.Dtos.Payment;
+using Shared.Enums;
 
 namespace Shared.RabbitMq;
 public class RabbitMqConsumer : IDisposable
@@ -64,16 +65,32 @@ public class RabbitMqConsumer : IDisposable
                              autoDelete: false,
                              arguments: null);
 
-        var body = Encoding.UTF8.GetBytes(message);
+        var body = GenerateMessage(message);
 
         channel.BasicPublish(exchange: "",
                              routingKey: queueName,
                              basicProperties: null,
                              body: body);
 
-        Console.WriteLine($"Message sent to orderServiceQueue: {message}");
+        Console.WriteLine($"Message sent to orderServiceQueue");
     }
 
+    private byte[] GenerateMessage(string oldMessage)
+    {
+        var paymentDto = JsonSerializer.Deserialize<PaymentDto>(oldMessage);
+
+        var random = new Random();
+
+        var notify = new PaymentStatusDto
+        {
+            OrderId = paymentDto.OrderId,
+            OrderStatus = random.Next(2) == 0 ? OrderStatus.Completed : OrderStatus.Reject
+        };
+
+        var message = JsonSerializer.Serialize(notify);
+
+        return Encoding.UTF8.GetBytes(message); 
+    }
     public void Dispose()
     {
         _channel.Dispose();

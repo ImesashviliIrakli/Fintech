@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using OrderService;
 using OrderService.Data;
 using OrderService.Models;
 using OrderService.Repositories;
@@ -33,13 +34,13 @@ builder.Services.AddDbContext<AppDbContext>
             }
         );
 
-builder.Services.AddHostedService<RabbitMqConsumerService>(provider =>
+builder.Services.AddHostedService<RabbitMqConsumer>(provider =>
 {
     var connectionString = builder.Configuration.GetConnectionString("RabbitMqConnection");
     var queueName = "orderServiceQueue";
     var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
 
-    return new RabbitMqConsumerService(connectionString, queueName, scopeFactory);
+    return new RabbitMqConsumer(connectionString, queueName, scopeFactory);
 });
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
