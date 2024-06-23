@@ -12,6 +12,7 @@ namespace PaymentService.Services;
 
 public class PaymentService : IPaymentService
 {
+    private const string Url = "https://localhost:7001/orders/";
     private readonly IPaymentRepository _repository;
     private readonly IMapper _mapper;
     private readonly IHttpClientFactory _httpClientFactory;
@@ -45,7 +46,7 @@ public class PaymentService : IPaymentService
     private async Task CheckOrderAsync(int orderId, string apiKey, string apiSecret)
     {
         var httpClient = _httpClientFactory.CreateClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7001/orders/{orderId}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}{orderId}");
 
         request.Headers.Add("ApiKey", apiKey);
         request.Headers.Add("ApiSecret", apiSecret);

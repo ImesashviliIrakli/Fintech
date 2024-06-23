@@ -2,6 +2,7 @@
 
 public class IdentityService : IIdentityService
 {
+    private const string Url = "https://localhost:7000/api/companies/validate";
     private readonly HttpClient _httpClient;
 
     public IdentityService(HttpClient httpClient)
@@ -11,7 +12,7 @@ public class IdentityService : IIdentityService
 
     public async Task<int?> ValidateCompanyCredentialsAsync(string apiKey, string apiSecret)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:7000/api/companies/validate");
+        var request = new HttpRequestMessage(HttpMethod.Get, Url);
         request.Headers.Add("ApiKey", apiKey);
         request.Headers.Add("ApiSecret", apiSecret);
 

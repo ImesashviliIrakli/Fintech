@@ -20,16 +20,16 @@ public class OrderService : IOrderService
         _logger = logger;
     }
 
-    public async Task CompleteOrderAsync(PaymentStatusDto orderDto)
+    public async Task CompleteOrderAsync(PaymentStatusDto paymenStatusDto)
     {
-        var check = await CheckCompletedOrdersAmountAsync(orderDto.CompanyId);
+        var check = await CheckCompletedOrdersAmountAsync(paymenStatusDto.CompanyId);
 
         if (!check)
             return;
 
-        await _orderRepository.CompleteOrderAsync(orderDto.OrderId, (int)orderDto.OrderStatus);
+        await _orderRepository.CompleteOrderAsync(paymenStatusDto.OrderId, (int)paymenStatusDto.OrderStatus);
 
-        _logger.LogInformation($"Order with id:{orderDto.OrderId} completed");
+        _logger.LogInformation($"Order with id:{paymenStatusDto.OrderId} completed");
     }
 
     public async Task<ComputeOrderDto> ComputeCompanyOrdersAsync(int companyId)
