@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using IdentityService.Models;
 using IdentityService.Repositories;
-using Shared;
+using Shared.Dtos.Identity;
 using Shared.Exceptions;
-using Shared.IdentityService;
+using Shared.Helpers;
 
 namespace IdentityService.Services;
 

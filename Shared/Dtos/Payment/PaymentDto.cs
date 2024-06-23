@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Shared.PaymentService;
+namespace Shared.Dtos.Payment;
 
 public class PaymentDto
 {

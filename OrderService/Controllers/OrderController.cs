@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrderService.Services;
-using Shared.OrderService;
-using Swashbuckle.AspNetCore.Annotations;
+using Shared.Dtos.Order;
+using Shared.Helpers;
 
 namespace OrderService.Controllers;
 

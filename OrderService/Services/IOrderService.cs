@@ -1,4 +1,4 @@
-﻿using Shared.OrderService;
+﻿using Shared.Dtos.Order;
 
 namespace OrderService.Services;
 

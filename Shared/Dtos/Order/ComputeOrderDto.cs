@@ -1,4 +1,4 @@
-﻿namespace Shared.OrderService;
+﻿namespace Shared.Dtos.Order;
 
 public class ComputeOrderDto
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Shared.IdentityService;
+namespace Shared.Dtos.Identity;
 
 public class CompanyDto
 {

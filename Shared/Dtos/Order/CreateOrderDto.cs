@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Shared.OrderService;
+namespace Shared.Dtos.Order;
 
 public class CreateOrderDto
 {

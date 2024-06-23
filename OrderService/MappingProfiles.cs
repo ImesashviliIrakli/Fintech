@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using OrderService.Models;
-using Shared.OrderService;
+using Shared.Dtos.Order;
 
 namespace OrderService;
 

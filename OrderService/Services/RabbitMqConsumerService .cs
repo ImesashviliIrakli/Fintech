@@ -1,7 +1,7 @@
 ﻿using OrderService.Repositories;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Shared.PaymentService;
+using Shared.Dtos.Payment;
 using System.Text;
 using System.Text.Json;
 

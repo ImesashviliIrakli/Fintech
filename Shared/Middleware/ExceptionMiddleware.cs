@@ -1,8 +1,10 @@
-﻿using Shared.Exceptions;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Shared.Exceptions;
 using System.Net;
 using System.Text.Json;
 
-namespace PaymentService.Middleware;
+namespace Shared.Middleware;
 
 public class ExceptionMiddleware
 {

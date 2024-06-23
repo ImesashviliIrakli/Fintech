@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using IdentityService.Models;
-using Shared.IdentityService;
+using Shared.Dtos.Identity;
 
 namespace IdentityService;
 

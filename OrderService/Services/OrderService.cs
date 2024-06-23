@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using OrderService.Models;
 using OrderService.Repositories;
-using Shared;
+using Shared.Dtos.Order;
+using Shared.Enums;
 using Shared.Exceptions;
-using Shared.OrderService;
 
 namespace OrderService.Services;
 

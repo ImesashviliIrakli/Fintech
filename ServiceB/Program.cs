@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Shared;
+using Shared.RabbitMq;
 
 Console.WriteLine("Service B Listener");
 

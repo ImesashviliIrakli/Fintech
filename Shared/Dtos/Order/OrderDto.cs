@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Shared.Enums;
 
-namespace Shared.OrderService;
+namespace Shared.Dtos.Order;
 
 public class OrderDto
 {

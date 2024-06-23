@@ -2,9 +2,9 @@
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
-using Shared.PaymentService;
+using Shared.Dtos.Payment;
 
-namespace Shared;
+namespace Shared.RabbitMq;
 public class RabbitMqConsumer : IDisposable
 {
     private readonly IConnection _connection;

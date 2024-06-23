@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.DataProtection;
 using PaymentService.Models;
 using PaymentService.Repositories;
 using RabbitMQ.Client;
-using Shared;
+using Shared.Dtos.Payment;
+using Shared.Enums;
 using Shared.Exceptions;
-using Shared.PaymentService;
 using System.Text.Json;
 
 namespace PaymentService.Services;

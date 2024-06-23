@@ -1,4 +1,4 @@
-﻿namespace PaymentService.Services;
+﻿namespace Shared.Services;
 
 public class IdentityService : IIdentityService
 {

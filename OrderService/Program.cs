@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using OrderService;
 using OrderService.Data;
-using OrderService.Middleware;
 using OrderService.Models;
 using OrderService.Repositories;
 using OrderService.Services;
+using Shared.Helpers;
+using Shared.Middleware;
+using Shared.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +19,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.EnableAnnotations();
     c.OperationFilter<CustomHeaderParameter>();
-}); 
+});
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddDbContext<AppDbContext>
@@ -48,8 +47,10 @@ builder.Services.AddScoped<IOrderService, OrderService.Services.OrderService>();
 builder.Services.AddHttpClient<IIdentityService, IdentityService>();
 builder.Services.AddScoped<ApiKeyAuthFilter>();
 
-builder.Services.AddRateLimiter(options => {
-    options.AddFixedWindowLimiter("Fixed", opt => {
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("Fixed", opt =>
+    {
         opt.Window = TimeSpan.FromSeconds(3);
         opt.PermitLimit = 3;
     });

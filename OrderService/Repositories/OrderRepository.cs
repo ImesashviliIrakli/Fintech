@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrderService.Data;
 using OrderService.Models;
-using Shared;
+using Shared.Enums;
 using Shared.Exceptions;
 
 namespace OrderService.Repositories;
