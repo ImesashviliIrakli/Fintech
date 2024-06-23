@@ -1,5 +1,5 @@
-﻿using Shared;
-using Shared.PaymentService;
+﻿using Shared.Dtos.Payment;
+using Shared.Enums;
 
 namespace PaymentService.Services;
 

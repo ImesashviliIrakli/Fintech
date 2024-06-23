@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using OrderService.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Shared.Services;
 
-namespace OrderService;
+namespace Shared.Helpers;
 
 public class ApiKeyAuthFilter : IAsyncActionFilter
 {
@@ -33,3 +33,4 @@ public class ApiKeyAuthFilter : IAsyncActionFilter
         await next();
     }
 }
+

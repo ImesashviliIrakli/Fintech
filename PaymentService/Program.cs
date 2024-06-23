@@ -1,13 +1,14 @@
-using PaymentService.Services;
-using PaymentService;
-using PaymentService.Models;
-using System.Reflection;
-using PaymentService.Data;
 using Microsoft.EntityFrameworkCore;
+using PaymentService;
+using PaymentService.Data;
+using PaymentService.Models;
 using PaymentService.Repositories;
-using PaymentService.Middleware;
-using Microsoft.AspNetCore.Connections;
+using PaymentService.Services;
 using RabbitMQ.Client;
+using Shared.Helpers;
+using Shared.Middleware;
+using Shared.Services;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<CustomHeaderParameter>();
-}); 
+});
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

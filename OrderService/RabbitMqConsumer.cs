@@ -1,13 +1,14 @@
 ﻿using OrderService.Repositories;
+using OrderService.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Shared.PaymentService;
+using Shared.Dtos.Payment;
 using System.Text;
 using System.Text.Json;
 
-namespace OrderService.Services;
+namespace OrderService;
 
-public class RabbitMqConsumerService : BackgroundService
+public class RabbitMqConsumer : BackgroundService
 {
     private readonly string _rabbitMqConnectionString;
     private readonly string _queueName;
@@ -15,7 +16,7 @@ public class RabbitMqConsumerService : BackgroundService
     private IConnection _connection;
     private IModel _channel;
 
-    public RabbitMqConsumerService(
+    public RabbitMqConsumer(
         string rabbitMqConnectionString,
         string queueName,
         IServiceScopeFactory scopeFactory)
@@ -45,15 +46,17 @@ public class RabbitMqConsumerService : BackgroundService
         consumer.Received += async (sender, ea) =>
         {
             var body = ea.Body.ToArray();
+
             var message = Encoding.UTF8.GetString(body);
-            var paymentDto = JsonSerializer.Deserialize<PaymentDto>(message);
+
+            var paymentStatusDto = JsonSerializer.Deserialize<PaymentStatusDto>(message);
 
             using (var scope = _scopeFactory.CreateScope())
             {
-                var orderRepository = scope.ServiceProvider.GetRequiredService<IOrderRepository>();
+                var orderRepository = scope.ServiceProvider.GetRequiredService<IOrderService>();
                 Console.WriteLine($"Received message from {_queueName}: {message}");
 
-                await orderRepository.CompleteOrderAsync(paymentDto.OrderId);
+                await orderRepository.CompleteOrderAsync(paymentStatusDto);
             }
 
             _channel.BasicAck(ea.DeliveryTag, false);

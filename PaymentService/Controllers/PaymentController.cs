@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PaymentService.Services;
-using Shared.OrderService;
-using Shared.PaymentService;
+using Shared.Dtos.Payment;
+using Shared.Helpers;
 
 namespace PaymentService.Controllers;
 

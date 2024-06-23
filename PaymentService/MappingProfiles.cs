@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using PaymentService.Models;
-using Shared.PaymentService;
+using Shared.Dtos.Payment;
 
 namespace PaymentService;
 

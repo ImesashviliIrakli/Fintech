@@ -1,9 +1,10 @@
 using IdentityService.Data;
-using IdentityService.Middleware;
 using IdentityService.Repositories;
 using IdentityService.Services;
 using Microsoft.EntityFrameworkCore;
 using Shared;
+using Shared.Helpers;
+using Shared.Middleware;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

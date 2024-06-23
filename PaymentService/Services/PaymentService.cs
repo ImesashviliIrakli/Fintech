@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.DataProtection;
 using PaymentService.Models;
 using PaymentService.Repositories;
 using RabbitMQ.Client;
-using Shared;
+using Shared.Dtos.Payment;
+using Shared.Enums;
 using Shared.Exceptions;
-using Shared.PaymentService;
 using System.Text.Json;
 
 namespace PaymentService.Services;
@@ -28,13 +28,16 @@ public class PaymentService : IPaymentService
         _httpClientFactory = httpClientFactory;
         _rabbitMqConnection = rabbitMqConnection;
     }
-    public async Task<OrderStatus> ProcessPaymentAsync(PaymentDto payment, string apiKey, string apiSecret)
+    public async Task<OrderStatus> ProcessPaymentAsync(PaymentDto paymentDto, string apiKey, string apiSecret)
     {
-        await CheckOrderAsync(payment.OrderId, apiKey, apiSecret);
+        if (paymentDto.ExpiryDate < DateTime.Now)
+            throw new ExpiryDateException($"The card is expired");
 
-        await _repository.CreatePaymentAsync(_mapper.Map<Payment>(payment));
+        await CheckOrderAsync(paymentDto.OrderId, apiKey, apiSecret);
 
-        SendToService(payment);
+        await _repository.CreatePaymentAsync(_mapper.Map<Payment>(paymentDto));
+
+        SendToService(paymentDto);
 
         return OrderStatus.Processing;
     }
