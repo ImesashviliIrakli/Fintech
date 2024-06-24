@@ -4,8 +4,7 @@ This project is a fintech application built with .NET 8, utilizing microservices
 
 # Diagram
 
-![Fintech](https://github.com/ImesashviliIrakli/Fintech/assets/77686006/9ee1b0fc-1267-4283-84d7-f82e5a3493ad)
-
+![Fintech](https://github.com/ImesashviliIrakli/Fintech/assets/77686006/c2007582-dda5-486d-a03c-a42b0100499b)
 
 ## Services Overview
 
