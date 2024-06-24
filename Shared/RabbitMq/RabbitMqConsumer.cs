@@ -19,17 +19,16 @@ public class RabbitMqConsumer : IDisposable
             HostName = "rabbitmq",
             Port = 5672,
             UserName = "guest",
-            Password = "guest"
+            Password = "guest",
+            RequestedHeartbeat = TimeSpan.FromSeconds(30),
+            AutomaticRecoveryEnabled = true
         };
 
-        Console.WriteLine("Attempting to create RabbitMQ connection...");
         _connection = factory.CreateConnection();
-        Console.WriteLine("RabbitMQ connection created successfully.");
 
         _channel = _connection.CreateModel();
         _queueName = queueName;
 
-        Console.WriteLine($"Declaring queue: {_queueName}");
         _channel.QueueDeclare(queue: _queueName,
                               durable: false,
                               exclusive: false,
@@ -49,6 +48,8 @@ public class RabbitMqConsumer : IDisposable
 
                 Console.WriteLine($"Received message: {message}");
 
+                Task.Delay(1000).Wait();
+
                 Console.WriteLine($"Received message: {message}");
 
                 var paymentDto = JsonSerializer.Deserialize<PaymentDto>(message);
@@ -64,7 +65,6 @@ public class RabbitMqConsumer : IDisposable
 
                 ProcessMessage(paymentDto);
 
-                // Acknowledge message only after successful processing
                 _channel.BasicAck(ea.DeliveryTag, false);
             }
             catch (Exception ex)
@@ -76,7 +76,7 @@ public class RabbitMqConsumer : IDisposable
 
         Console.WriteLine("Starting BasicConsume...");
         _channel.BasicConsume(queue: _queueName,
-                              autoAck: false, // Disable auto-acknowledgement
+                              autoAck: false,
                               consumer: consumer);
 
         Console.WriteLine($"RabbitMQ consumer for queue '{_queueName}' started.");
@@ -86,7 +86,6 @@ public class RabbitMqConsumer : IDisposable
     {
         try
         {
-            Console.WriteLine($"Processing message for Order ID: {paymentDto.OrderId}");
             SendToOrderService(paymentDto);
         }
         catch (Exception ex)
@@ -138,7 +137,6 @@ public class RabbitMqConsumer : IDisposable
             };
 
             var message = JsonSerializer.Serialize(notify);
-            Console.WriteLine($"Generated message: {message}");
 
             return Encoding.UTF8.GetBytes(message);
         }

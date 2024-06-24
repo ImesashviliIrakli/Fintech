@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.8'
 
 services:
 
@@ -19,18 +19,15 @@ services:
     hostname: rabbitmq
     container_name: rabbitmq
     ports:
-      - "4369:4369"
-      - "5671:5671"
       - "5672:5672"
-      - "25672:25672"
-      - "15671:15671"
       - "15672:15672"
-
+ 
    identityservice:
     build:
       context: .
       dockerfile: IdentityService/Dockerfile
     container_name: identityservice
+    restart: on-failure
     ports:
       - "5001:8080"
       - "5002:8081"
@@ -38,13 +35,13 @@ services:
       - postgres
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-
+ 
    orderservice:
     build:
       context: .
       dockerfile: OrderService/Dockerfile
     container_name: orderservice
-    restart: always
+    restart: on-failure
     ports:
       - "5003:8080"
       - "5004:8081"
@@ -59,7 +56,7 @@ services:
       context: .
       dockerfile: PaymentService/Dockerfile
     container_name: paymentservice
-    restart: always
+    restart: on-failure
     ports:
       - "5005:8080"
       - "5006:8081"
@@ -74,22 +71,18 @@ services:
       context: .
       dockerfile: ServiceA/Dockerfile
     container_name: servicea
-    ports:
-      - "5007:8080"  # Added to expose ServiceA ports
-      - "5008:8081"
+    restart: on-failure
     depends_on:
       - rabbitmq
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
- 
+
    serviceb:
     build:
       context: .
       dockerfile: ServiceB/Dockerfile
     container_name: serviceb
-    ports:
-      - "5009:8080"  # Added to expose ServiceB ports
-      - "5010:8081"
+    restart: on-failure
     depends_on:
       - rabbitmq
     environment:

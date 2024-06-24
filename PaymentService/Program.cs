@@ -1,50 +1,24 @@
-using Microsoft.EntityFrameworkCore;
 using PaymentService;
-using PaymentService.Data;
 using PaymentService.Models;
-using PaymentService.Repositories;
-using PaymentService.Services;
-using RabbitMQ.Client;
-using Shared.Helpers;
 using Shared.Middleware;
-using Shared.Services;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<CustomHeaderParameter>();
 });
 
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSqlConnection"));
-});
-
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-builder.Services.AddScoped<IPaymentService, PaymentService.Services.PaymentService>();
-builder.Services.AddHttpClient<IIdentityService, IdentityService>();
-builder.Services.AddScoped<ApiKeyAuthFilter>();
-builder.Services.AddHttpClient();
-
-var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, UserName = "guest", Password = "guest" };
-
-var rabbitMqConnection = factory.CreateConnection();
-
-builder.Services.AddSingleton<IConnection>(rabbitMqConnection);
+builder.Services.AddCustomServices(builder.Configuration);
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
