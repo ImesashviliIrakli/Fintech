@@ -17,16 +17,14 @@ public static class ServiceExtensions
 
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
+            options.UseNpgsql(configuration["POSTGRES_CONNECTION_STRING"]);
         });
 
         services.AddHostedService<RabbitMqConsumer>(provider =>
         {
-            var connectionString = configuration.GetConnectionString("RabbitMqConnection");
-            var queueName = configuration.GetConnectionString("QueueName");
             var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
 
-            return new RabbitMqConsumer(connectionString, queueName, scopeFactory);
+            return new RabbitMqConsumer(scopeFactory, configuration);
         });
 
         services.AddScoped<IOrderRepository, OrderRepository>();

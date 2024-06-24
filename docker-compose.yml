@@ -2,18 +2,6 @@ version: '3.8'
 
 services:
 
-   postgres:
-    image: postgres:latest
-    container_name: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Talaxi123
-      POSTGRES_DB: fintech
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
    rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbitmq
@@ -40,11 +28,11 @@ services:
     ports:
       - "5001:8080"
       - "5002:8081"
-    depends_on:
-      - postgres
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
- 
+      - POSTGRES_CONNECTION_STRING=Host=${POSTGRE_DB_HOST};Port=${POSTGRE_DB_PORT}; Database=${IDENTITY_SERVICE_DB_NAME}; Username=${POSTGRES_USER}; Password=${POSTGRES_PASSWORD}
+      - ENCRYPTIONKEY=${ENCRYPTIONKEY}
+      - ENCRYPTIONIV=${ENCRYPTIONIV}
    orderservice:
     build:
       context: .
@@ -55,10 +43,15 @@ services:
       - "5003:8080"
       - "5004:8081"
     depends_on:
-      - postgres
       - rabbitmq
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - POSTGRES_CONNECTION_STRING=Host=${POSTGRE_DB_HOST};Port=${POSTGRE_DB_PORT};Database=${ORDER_SERVICE_DB_NAME};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - RABBITMQ_QUEUE_NAME=${ORDER_SERVICE_QUEUE_NAME}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
 
    paymentservice:
     build:
@@ -70,10 +63,14 @@ services:
       - "5005:8080"
       - "5006:8081"
     depends_on:
-      - postgres
       - rabbitmq
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - POSTGRES_CONNECTION_STRING=Host=${POSTGRE_DB_HOST};Port=${POSTGRE_DB_PORT};Database=${PAYMENT_SERVICE_DB_NAME};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
 
    servicea:
     build:

@@ -19,9 +19,7 @@ public class RabbitMqConsumer : IDisposable
             HostName = "rabbitmq",
             Port = 5672,
             UserName = "guest",
-            Password = "guest",
-            RequestedHeartbeat = TimeSpan.FromSeconds(30),
-            AutomaticRecoveryEnabled = true
+            Password = "guest"
         };
 
         _connection = factory.CreateConnection();

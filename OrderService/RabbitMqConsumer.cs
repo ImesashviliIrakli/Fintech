@@ -1,5 +1,4 @@
-﻿using OrderService.Repositories;
-using OrderService.Services;
+﻿using OrderService.Services;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Shared.Dtos.Payment;
@@ -15,22 +14,25 @@ public class RabbitMqConsumer : BackgroundService
     private readonly IServiceScopeFactory _scopeFactory;
     private IConnection _connection;
     private IModel _channel;
+    private IConfiguration _configuration;
 
     public RabbitMqConsumer(
-        string rabbitMqConnectionString,
-        string queueName,
-        IServiceScopeFactory scopeFactory)
+        IServiceScopeFactory scopeFactory,
+        IConfiguration configuration)
     {
-        _rabbitMqConnectionString = rabbitMqConnectionString;
-        _queueName = queueName;
+        _queueName = configuration["RABBITMQ_QUEUE_NAME"];
         _scopeFactory = scopeFactory;
+        _configuration = configuration;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var factory = new ConnectionFactory
         {
-            Uri = new Uri(_rabbitMqConnectionString)
+            HostName = _configuration["RABBITMQ_HOST"],
+            Port = int.Parse(_configuration["RABBITMQ_PORT"]),
+            UserName = _configuration["RABBITMQ_USER"],
+            Password = _configuration["RABBITMQ_PASS"]
         };
 
         _connection = factory.CreateConnection();

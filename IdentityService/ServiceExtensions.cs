@@ -13,16 +13,22 @@ public static class ServiceExtensions
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+        var connectionString = configuration["POSTGRES_CONNECTION_STRING"];
+
+        Console.WriteLine(connectionString);
+
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
+            options.UseNpgsql(connectionString);
         });
 
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<ICompanyService, CompanyService>();
 
-        var encryptionKey = configuration["ENCRYPTION_KEY"];//"12345678901234567890123456789012";
-        var encryptionIv = configuration["ENCRYPTION_IV"];// "1234567890123456";
+        var encryptionKey = configuration["ENCRYPTIONKEY"];//"12345678901234567890123456789012";
+        var encryptionIv = configuration["ENCRYPTIONIV"];// "1234567890123456";
+
+        Console.WriteLine($"{encryptionKey} | {encryptionIv}");
 
         if (string.IsNullOrEmpty(encryptionKey) || string.IsNullOrEmpty(encryptionIv))
             throw new InvalidOperationException("Encryption keys are not set in user secrets.");

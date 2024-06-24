@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PaymentService.Data;
-using PaymentService.Models;
 using PaymentService.Repositories;
 using PaymentService.Services;
 using RabbitMQ.Client;
@@ -18,7 +17,7 @@ public static class ServiceExtensions
 
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlConnection"));
+            options.UseNpgsql(configuration["POSTGRES_CONNECTION_STRING"]);
         });
 
         services.AddScoped<IPaymentRepository, PaymentRepository>();
@@ -30,10 +29,10 @@ public static class ServiceExtensions
 
         var factory = new ConnectionFactory()
         {
-            HostName = "rabbitmq",
-            Port = 5672,
-            UserName = "guest",
-            Password = "guest"
+            HostName = configuration["RABBITMQ_HOST"],
+            Port = int.Parse(configuration["RABBITMQ_PORT"]),
+            UserName = configuration["RABBITMQ_USER"],
+            Password = configuration["RABBITMQ_PASS"]
         };
 
         var rabbitMqConnection = factory.CreateConnection();
