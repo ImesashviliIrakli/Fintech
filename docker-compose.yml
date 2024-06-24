@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+
+   postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Talaxi123
+      POSTGRES_DB: fintech
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+   rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+ 
+   identityservice:
+    build:
+      context: .
+      dockerfile: IdentityService/Dockerfile
+    container_name: identityservice
+    restart: on-failure
+    ports:
+      - "5001:8080"
+      - "5002:8081"
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+ 
+   orderservice:
+    build:
+      context: .
+      dockerfile: OrderService/Dockerfile
+    container_name: orderservice
+    restart: on-failure
+    ports:
+      - "5003:8080"
+      - "5004:8081"
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+   paymentservice:
+    build:
+      context: .
+      dockerfile: PaymentService/Dockerfile
+    container_name: paymentservice
+    restart: on-failure
+    ports:
+      - "5005:8080"
+      - "5006:8081"
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+   servicea:
+    build:
+      context: .
+      dockerfile: ServiceA/Dockerfile
+    container_name: servicea
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+   serviceb:
+    build:
+      context: .
+      dockerfile: ServiceB/Dockerfile
+    container_name: serviceb
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+volumes:
+  pgdata:
