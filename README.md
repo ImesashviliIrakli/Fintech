@@ -30,28 +30,17 @@ This project is a fintech application built with .NET 8, utilizing microservices
 Before running the application, ensure you have the following installed and configured:
 
 - **Docker Desktop** for Windows
-- **PostgreSQL** with setup for username and password
-- Update the database configurations (`username` and `password`) in `appsettings.json` for IdentityService, OrderService, and PaymentService.
-- Configure user secrets for encryption keys.
-
-## User Secrets Configuration
-
-To set encryption keys securely, use the following steps:
-
-1. Open a command prompt or terminal in the project's root directory.
-
-2. Set the encryption key using the following commands:
-```
-dotnet user-secrets set "EncryptionKey" "12345678901234567890123456789012"
-dotnet user-secrets set "EncryptionIV" "1234567890123456"
-```
+- **PostgreSQL** with setup for username and password.
 
 ## How to Run
 
 1. **Update Databases:**
 - Run `update-database` command for each of the services (IdentityService, OrderService, PaymentService) to create necessary tables.
 
-2. **Build and Start Docker Containers:**
+2. **Postgre UserName/Password Change:**
+   - In the `.env` file located in the root directory of the solution, update the Postgre UserName and Password, and if your port is different change that too. 
+
+3. **Build and Start Docker Containers:**
 - Open a terminal in the solution folder and run:
   ```
   docker-compose build
