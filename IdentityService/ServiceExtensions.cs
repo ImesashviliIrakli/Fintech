@@ -21,8 +21,8 @@ public static class ServiceExtensions
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<ICompanyService, CompanyService>();
 
-        var encryptionKey = "12345678901234567890123456789012";//configuration["ENCRYPTION_KEY"];
-        var encryptionIv = "1234567890123456";// configuration["ENCRYPTION_IV"];
+        var encryptionKey = configuration["ENCRYPTION_KEY"];//"12345678901234567890123456789012";
+        var encryptionIv = configuration["ENCRYPTION_IV"];// "1234567890123456";
 
         if (string.IsNullOrEmpty(encryptionKey) || string.IsNullOrEmpty(encryptionIv))
             throw new InvalidOperationException("Encryption keys are not set in user secrets.");

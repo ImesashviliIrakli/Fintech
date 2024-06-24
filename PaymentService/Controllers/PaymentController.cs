@@ -27,6 +27,7 @@ public class PaymentController : ControllerBase
         }
 
         var payment = await _paymentService.ProcessPaymentAsync(paymentDto, apiKey, apiSecret);
-        return Ok(payment);
+        var result = new { status = payment.ToString() };
+        return Ok(result);
     }
 }
