@@ -6,6 +6,7 @@ This project is a fintech application built with .NET 8, utilizing microservices
 
 ![Fintech](https://github.com/ImesashviliIrakli/Fintech/assets/77686006/9ee1b0fc-1267-4283-84d7-f82e5a3493ad)
 
+
 ## Services Overview
 
 1. **IdentityService**
@@ -32,42 +33,55 @@ Before running the application, ensure you have the following installed and conf
 - **Docker Desktop** for Windows
 - **PostgreSQL** with setup for username and password
 - Update the database configurations (`username` and `password`) in `appsettings.json` for IdentityService, OrderService, and PaymentService.
+- Configure user secrets for encryption keys.
+
+## User Secrets Configuration
+
+To set encryption keys securely, use the following steps:
+
+1. Open a command prompt or terminal in the project's root directory.
+
+2. Set the encryption key using the following commands:
+```
+dotnet user-secrets set "EncryptionKey" "12345678901234567890123456789012"
+dotnet user-secrets set "EncryptionIV" "1234567890123456"
+```
 
 ## How to Run
 
 1. **Update Databases:**
-   - Run `update-database` command for each of the services (IdentityService, OrderService, PaymentService) to create necessary tables.
+- Run `update-database` command for each of the services (IdentityService, OrderService, PaymentService) to create necessary tables.
 
 2. **Build and Start Docker Containers:**
-   - Open a terminal in the solution folder and run:
-     ```
-     docker-compose build
-     docker-compose up
-     ```
-   - Wait for the services to start (may take up to 2 minutes).
+- Open a terminal in the solution folder and run:
+  ```
+  docker-compose build
+  docker-compose up
+  ```
+- Wait for the services to start (may take up to 2 minutes).
 
 3. **Access Services:**
-   - Once Docker containers are up, access the following URLs:
-     - IdentityService Swagger UI: `localhost:5001/swagger`
-     - OrderService Swagger UI: `localhost:5003/swagger`
-     - PaymentService Swagger UI: `localhost:5005/swagger`
-     - RabbitMQ Management UI: `localhost:15672` (username: guest, password: guest)
+- Once Docker containers are up, access the following URLs:
+  - IdentityService Swagger UI: `localhost:5001/swagger`
+  - OrderService Swagger UI: `localhost:5003/swagger`
+  - PaymentService Swagger UI: `localhost:5005/swagger`
+  - RabbitMQ Management UI: `localhost:15672` (username: guest, password: guest)
 
 ## Usage
 
 1. **IdentityService:**
-   - Create a new company to obtain API Key and API Secret.
+- Create a new company to obtain API Key and API Secret.
 
 2. **OrderService:**
-   - Use obtained credentials from IdentityService to create new orders.
-   - Access `/orders` endpoint to create orders.
+- Use obtained credentials from IdentityService to create new orders.
+- Access `/orders` endpoint to create orders.
 
 3. **PaymentService:**
-   - Use credentials from IdentityService to process payments.
-   - Access `/process` endpoint to initiate payment processing with orderId, cardnumber, and expiry date.
+- Use credentials from IdentityService to process payments.
+- Access `/process` endpoint to initiate payment processing with orderId, cardnumber, and expiry date.
 
 4. **ServiceA and ServiceB:**
-   - Mock services triggered by PaymentService based on the card number's last digit, simulating transaction outcomes.
+- Mock services triggered by PaymentService based on the card number's last digit, simulating transaction outcomes.
 
 ## Notes
 
