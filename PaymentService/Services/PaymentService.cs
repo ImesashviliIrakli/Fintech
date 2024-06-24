@@ -12,7 +12,7 @@ namespace PaymentService.Services;
 
 public class PaymentService : IPaymentService
 {
-    private const string Url = "https://localhost:7001/orders/";
+    private const string Url = "http://orderservice:8080/orders/";
     private readonly IPaymentRepository _repository;
     private readonly IMapper _mapper;
     private readonly IHttpClientFactory _httpClientFactory;

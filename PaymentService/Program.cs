@@ -34,8 +34,10 @@ builder.Services.AddHttpClient<IIdentityService, IdentityService>();
 builder.Services.AddScoped<ApiKeyAuthFilter>();
 builder.Services.AddHttpClient();
 
-var factory = new ConnectionFactory() { HostName = "localhost" }; // or your RabbitMQ host
+var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, UserName = "guest", Password = "guest" };
+
 var rabbitMqConnection = factory.CreateConnection();
+
 builder.Services.AddSingleton<IConnection>(rabbitMqConnection);
 
 var app = builder.Build();
