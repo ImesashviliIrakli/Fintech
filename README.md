@@ -34,13 +34,10 @@ Before running the application, ensure you have the following installed and conf
 
 ## How to Run
 
-1. **Update Databases:**
-- Run `update-database` command for each of the services (IdentityService, OrderService, PaymentService) to create necessary tables.
-
-2. **Postgre UserName/Password Change:**
+1. **Postgre UserName/Password Change:**
    - In the `.env` file located in the root directory of the solution, update the Postgre UserName and Password, and if your port is different change that too. 
 
-3. **Build and Start Docker Containers:**
+2. **Build and Start Docker Containers:**
 - Open a terminal in the solution folder and run:
   ```
   docker-compose build
